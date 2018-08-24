@@ -31,3 +31,11 @@
   padding-bottom:10px;
 }
 
+.img-description img{
+  max-width:100% !important;
+  max-height:100% !important;  
+}
+.container-body,.container-header{
+  padding-top:20px;
+}
+
