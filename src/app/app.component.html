@@ -1,0 +1,28 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h3>
+    {{ flickrData.title }}
+  </h3>  
+</div>
+
+<div >
+  
+  <div class="card-columns" >
+    <div class="card" *ngFor="let item of flickrImages;let i=index">
+      <img class="card-img-top card-img-top" [src]="item.media.m" [alt]="item.title">      
+      <div class="card-body">
+        <div class="card-text card-line-1" title="Uploaded by {{item.author}} on {{item.published |date}}">Uploaded by {{item.author}} on {{item.published |date}}</div>
+        
+        <div class="img-description">
+        <a class="card-line-2" *ngIf="item.description && !item.displayDescription" href="javascript:void(0);" (click)="item.displayDescription=true;">Show Description</a>
+        <p *ngIf="item.displayDescription" #cardtex{{i}} class="card-text" [innerHTML]="item.description"></p> 
+        <a class="card-line-2" *ngIf="item.displayDescription" href="javascript:void(0);" (click)="item.displayDescription=false;">Hide Description</a>
+      </div>
+
+        <div class="card-text card-line-3" [title]="item.tags">{{item.tags}}</div>
+      </div>
+    </div>
+  </div>
+<!-- </div> -->
+<!-- </div> -->
+</div>
