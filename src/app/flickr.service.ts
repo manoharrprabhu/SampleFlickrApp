@@ -9,34 +9,15 @@ import { map,catchError} from 'rxjs/operators';
 export class FlickrService {
 
   constructor(private jsonp:Jsonp) {     
-  }  
-
-  
-  public loadFlickrImages():Observable<any>{
-    //&callback=JSONP_CALLBACK
-    let apiUrl='https://api.flickr.com/services/feeds/photos_public.gne?format=json';
-    return this.jsonp.request(apiUrl).pipe(
-        map(res => {
-          // return res.json().results.map(item => {
-          //   return new SearchItem(
-          //       item.trackName,
-          //       item.artistName,
-          //       item.trackViewUrl,
-          //       item.artworkUrl30,
-          //       item.artistId
-          //   );
-          // });
-          return res.json();
-        }), catchError( error => {
-          return throwError( 'Something went wrong!' )
-        }));
   }
   
   public loadFlickrImagesFromApi(){
-    //&callback=JSONP_CALLBACK
+    //As this is a cross domailn request we have to do JsonP request
+    //As Jsonp request returns interms of callback and returns specific callback name "jsonFlickrFeed" 
+    //so this method must be available in window object and this will not be catched in subscribe block
     let apiUrl='https://api.flickr.com/services/feeds/photos_public.gne?format=json';
     return this.jsonp.request(apiUrl).subscribe(()=>{    
-      return  ;
+      return  ;//Nothing to do in subscribe block as this will never trigger and callback function will trigger
     },(error)=>{    
       return;
     });

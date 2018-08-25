@@ -10,38 +10,35 @@ import { DOCUMENT } from "@angular/platform-browser";
 })
 export class AppComponent {
   constructor(private flickrService:FlickrService,@Inject(DOCUMENT) private document: Document){
+    //Register the call back function in the window object
     (window as any).jsonFlickrFeed=this.jsonFlickrFeed;
+    
+    //Call the Flickr service first time
     this.loadAllFlickrImages();
   }
-  title = 'My Flickr App';
-  flickrData:FlickrResponseModel=new FlickrResponseModel();
+  title = 'My Flickr App';  
   flickrImages:FlickrImages[]=[];
-  private lastPaginationIndex=0;
+
+  //When Jsonp callback is invoked it will this method with data from flickr
   jsonFlickrFeed=(data:FlickrResponseModel)=>{
-    this.flickrData=data; 
-    this.paginationation();
+    this.title=data.title;//Set the Page header 
+    this.flickrImages=this.flickrImages.concat(data.items);  //Append the images to same array so that on scroll bottom it will update same
   }
    
-  private paginationation(){
-    if(this.flickrData.items.length>=(this.lastPaginationIndex+1)){
-      this.flickrImages=this.flickrImages.concat(this.flickrData.items.slice(this.lastPaginationIndex,this.lastPaginationIndex+6));
-      this.lastPaginationIndex+=6;
-    }
-  }
-
   private loadAllFlickrImages(){
-    
+    //Trigger Flickr service to get data
     this.flickrService.loadFlickrImagesFromApi();
   }
 
+  //listen window scroll event
   @HostListener("window:scroll", ["$event"])
   onWindowScroll=(event)=> {
       let pos = (this.document.documentElement.scrollTop || this.document.body.scrollTop) + this.document.documentElement.clientHeight;
       let max = this.document.documentElement.scrollHeight;
-      // pos/max will give you the distance between scroll bottom and and bottom of screen in percentage.
+      // check if current scroll position equals to total scroll height
       if(pos == max )   {
-      //Do your action here
-      this.paginationation();
+        //call the flickr service again to load more data
+        this.loadAllFlickrImages();
       }
   }
 }
